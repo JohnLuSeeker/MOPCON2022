@@ -16,26 +16,28 @@
 
 package androidx.compose.samples.crane.calendar
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 
 @Composable
 internal fun MonthHeader(modifier: Modifier = Modifier, month: String, year: String) {
-    Row(modifier = modifier.clearAndSetSemantics { }) {
+    Row(
+        modifier = modifier,
+    ) {
         Text(
-            modifier = Modifier.weight(1f),
-            text = month,
-            style = MaterialTheme.typography.h6
-        )
-        Text(
-            modifier = Modifier.align(Alignment.CenterVertically),
-            text = year,
-            style = MaterialTheme.typography.caption
+            text = "$month $year",
+            fontSize = 14.sp,
+            fontWeight = FontWeight.W400
         )
     }
 }

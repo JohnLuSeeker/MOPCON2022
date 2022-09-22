@@ -16,67 +16,101 @@
 
 package androidx.compose.samples.crane.calendar
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.samples.crane.calendar.model.CalendarUiState
 import androidx.compose.samples.crane.calendar.model.Week
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.unit.dp
 import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.Month
+import java.time.format.TextStyle
 import java.time.temporal.TemporalAdjusters
+import java.util.Locale
 
 @Composable
-internal fun DaysOfWeek(modifier: Modifier = Modifier) {
-    Row(modifier = modifier.clearAndSetSemantics { }) {
-        for (day in DayOfWeek.values()) {
-            DayOfWeekHeading(day = day.name.take(1))
+internal fun DaysOfWeek(
+    modifier: Modifier = Modifier,
+    firstDayOfWeek: DayOfWeek
+) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        for (day in 0L until 7L) {
+            DayOfWeekHeading(
+                modifier = Modifier.weight(1F),
+                day = firstDayOfWeek.plus(day).getDisplayName(TextStyle.SHORT, Locale.getDefault())
+            )
         }
     }
 }
 
 @Composable
 internal fun Week(
+    modifier: Modifier = Modifier,
     calendarUiState: CalendarUiState,
     week: Week,
-    onDayClicked: (LocalDate) -> Unit,
-    modifier: Modifier = Modifier
+    firstDayOfWeek: DayOfWeek,
+    dividerContent: @Composable BoxScope.(LocalDate, Month) -> Unit = { _, _ -> },
+    topDayContent: @Composable (LocalDate, Month) -> Unit = { _, _ -> },
+    bottomDayContent: @Composable (LocalDate, Month) -> Unit = { _, _ -> }
 ) {
     val beginningWeek = week.yearMonth.atDay(1).plusWeeks(week.number.toLong())
-    var currentDay = beginningWeek.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+    var currentDay = beginningWeek.with(TemporalAdjusters.previousOrSame(firstDayOfWeek))
 
-    Box {
-        Row(modifier = modifier) {
-            Spacer(
-                Modifier
-                    .weight(1f)
-                    .heightIn(max = CELL_SIZE)
-            )
-            for (i in 0..6) {
-                if (currentDay.month == week.yearMonth.month) {
-                    Day(
-                        calendarState = calendarUiState,
-                        day = currentDay,
-                        onDayClicked = onDayClicked,
-                        month = week.yearMonth
-                    )
-                } else {
-                    Box(modifier = Modifier.size(CELL_SIZE))
-                }
-                currentDay = currentDay.plusDays(1)
+//    Box {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+//            Spacer(
+//                Modifier
+//                    .weight(1f)
+//                    .heightIn(max = CELL_SIZE)
+//            )
+        for (i in 0..6) {
+            Box(Modifier.weight(1F)) {
+//                dividerContent(
+//                    Modifier.align(Alignment.CenterStart),
+//                    currentDay,
+//                    week.yearMonth.month
+//                )
+//                if (currentDay.month == week.yearMonth.month) {
+                Day(
+                    calendarState = calendarUiState,
+                    day = currentDay,
+                    month = week.yearMonth.month,
+                    topContent = topDayContent,
+                    bottomContent = bottomDayContent
+                )
+//                }
+//                else {
+//                    Box(modifier = Modifier.size(CELL_SIZE))
+//                }
+                dividerContent(
+                    currentDay,
+                    week.yearMonth.month
+                )
             }
-            Spacer(
-                Modifier
-                    .weight(1f)
-                    .heightIn(max = CELL_SIZE)
-            )
+
+            currentDay = currentDay.plusDays(1)
         }
+//            Spacer(
+//                Modifier
+//                    .weight(1f)
+//                    .heightIn(max = CELL_SIZE)
+//            )
     }
+//    }
 }
 
-internal val CELL_SIZE = 48.dp
+internal val CELL_WIDTH = 30.dp
+internal val CELL_HEIGHT = 18.dp
+internal val CELL_ASPECT_RATIO = 5F / 3F

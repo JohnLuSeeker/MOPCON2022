@@ -48,7 +48,7 @@ val BottomSheetShape = RoundedCornerShape(
 
 @Composable
 fun CraneTheme(content: @Composable () -> Unit) {
-    MaterialTheme(colors = craneColors, typography = craneTypography) {
+    MaterialTheme(colors = craneColors) {
         content()
     }
 }

@@ -18,11 +18,12 @@ package com.example.compose.jetsurvey
 
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.compose.jetsurvey.signinsignup.WelcomeFragmentDirections
 import java.security.InvalidParameterException
 
 enum class Screen { Welcome, SignUp, SignIn, Survey }
 
-fun Fragment.navigate(to: Screen, from: Screen) {
+fun Fragment.navigate(to: Screen, from: Screen, arg: String = "") {
     if (to == from) {
         throw InvalidParameterException("Can't navigate to $to")
     }
@@ -34,7 +35,7 @@ fun Fragment.navigate(to: Screen, from: Screen) {
             findNavController().navigate(R.id.sign_up_fragment)
         }
         Screen.SignIn -> {
-            findNavController().navigate(R.id.sign_in_fragment)
+            findNavController().navigate(WelcomeFragmentDirections.actionWelcomeFragmentToSignInFragment(arg))
         }
         Screen.Survey -> {
             findNavController().navigate(R.id.survey_fragment)

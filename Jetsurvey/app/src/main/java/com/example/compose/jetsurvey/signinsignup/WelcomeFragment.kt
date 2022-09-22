@@ -38,10 +38,10 @@ class WelcomeFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         viewModel.navigateTo.observe(viewLifecycleOwner) { navigateToEvent ->
             navigateToEvent.getContentIfNotHandled()?.let { navigateTo ->
-                navigate(navigateTo, Screen.Welcome)
+                navigate(navigateTo, Screen.Welcome, viewModel._email)
             }
         }
 
@@ -54,7 +54,9 @@ class WelcomeFragment : Fragment() {
                                 is WelcomeEvent.SignInSignUp -> viewModel.handleContinue(
                                     event.email
                                 )
-                                WelcomeEvent.SignInAsGuest -> viewModel.signInAsGuest()
+                                WelcomeEvent.SignInAsGuest -> viewModel.handleContinue(
+                                    "signup"
+                                )
                             }
                         }
                     )

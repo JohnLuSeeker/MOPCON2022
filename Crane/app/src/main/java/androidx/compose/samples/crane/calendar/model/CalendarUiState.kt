@@ -70,6 +70,11 @@ data class CalendarUiState(
         return true
     }
 
+    fun isDateOnToday(date: LocalDate): Boolean {
+        val now = LocalDate.now()
+        return now.year == date.year && now.dayOfYear == date.dayOfYear
+    }
+
     fun getNumberSelectedDaysInWeek(currentWeekStartDate: LocalDate, month: YearMonth): Int {
         var countSelected = 0
         var currentDate = currentWeekStartDate

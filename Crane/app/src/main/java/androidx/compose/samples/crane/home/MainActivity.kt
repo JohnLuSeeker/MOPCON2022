@@ -74,17 +74,29 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 NavHost(navController = navController, startDestination = Routes.Home.route) {
                     composable(Routes.Home.route) {
-                        val mainViewModel = hiltViewModel<MainViewModel>()
-                        MainScreen(
-                            widthSize = widthSizeClass,
-                            onExploreItemClicked = {
-                                launchDetailsActivity(context = this@MainActivity, item = it)
-                            },
-                            onDateSelectionClicked = {
-                                navController.navigate(Routes.Calendar.route)
-                            },
-                            mainViewModel = mainViewModel
+                        val parentEntry = remember {
+                            navController.getBackStackEntry(Routes.Home.route)
+                        }
+                        val parentViewModel = hiltViewModel<MainViewModel>(
+                            parentEntry
                         )
+                        CalendarScreen(onBackPressed = {
+                            navController.popBackStack()
+                        }, mainViewModel = parentViewModel)
+                        val mainViewModel = hiltViewModel<MainViewModel>()
+//                        MainScreen(
+//                            widthSize = widthSizeClass,
+//                            onExploreItemClicked = {
+//                                launchDetailsActivity(context = this@MainActivity, item = it)
+//                            },
+//                            onDateSelectionClicked = {
+//                                navController.navigate(Routes.Calendar.route)
+//                            },
+//                            mainViewModel = mainViewModel
+//                        )
+                        CalendarScreen(onBackPressed = {
+                            navController.popBackStack()
+                        }, mainViewModel = mainViewModel)
                     }
                     composable(Routes.Calendar.route) {
                         val parentEntry = remember(it) {

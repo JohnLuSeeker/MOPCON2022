@@ -17,6 +17,8 @@
 plugins {
     id("com.android.application")
     id("kotlin-android")
+    id("androidx.navigation.safeargs.kotlin")
+    id ("kotlinx-serialization")
 }
 
 android {
@@ -84,6 +86,15 @@ dependencies {
 
     implementation(libs.accompanist.permissions)
     implementation(libs.accompanist.systemuicontroller)
+
+    implementation("io.ktor:ktor-client-core:2.1.0")
+    implementation("io.ktor:ktor-client-okhttp:2.1.0")
+    implementation("io.ktor:ktor-client-content-negotiation:2.1.0")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.1.0")
+    implementation("io.coil-kt:coil-compose:2.2.1")
+    implementation("io.ktor:ktor-client-cio-jvm:2.1.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
 
     implementation(libs.coil.kt.compose)
 

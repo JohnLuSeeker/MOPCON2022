@@ -28,6 +28,7 @@ buildscript {
         classpath(libs.android.gradlePlugin)
         classpath(libs.kotlin.gradlePlugin)
         classpath(libs.spotless.gradlePlugin)
+        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.5.2")
     }
 }
 
@@ -52,6 +53,7 @@ subprojects {
 plugins {
     id("com.github.ben-manes.versions") version "0.41.0"
     id("nl.littlerobots.version-catalog-update") version "0.6.0"
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.6.21"
 }
 
 apply("${project.rootDir}/buildscripts/toml-updater-config.gradle")

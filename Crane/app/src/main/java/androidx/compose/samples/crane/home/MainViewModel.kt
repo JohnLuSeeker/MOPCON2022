@@ -57,7 +57,7 @@ class MainViewModel @Inject constructor(
 
     fun onDaySelected(daySelected: LocalDate) {
         viewModelScope.launch {
-            calendarState.setSelectedDay(daySelected)
+           // calendarState.setSelectedDay(daySelected)
         }
     }
 

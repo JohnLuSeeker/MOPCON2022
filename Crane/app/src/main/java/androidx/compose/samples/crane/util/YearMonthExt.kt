@@ -16,12 +16,33 @@
 
 package androidx.compose.samples.crane.util
 
-import androidx.compose.samples.crane.calendar.CALENDAR_STARTS_ON
+import android.util.Log
+import org.joda.time.LocalDate
+import java.time.DayOfWeek
 import java.time.YearMonth
 import java.time.temporal.WeekFields
 
-fun YearMonth.getNumberWeeks(weekFields: WeekFields = CALENDAR_STARTS_ON): Int {
+fun YearMonth.getNumberWeeks(firstDayOfWeek: DayOfWeek): Int {
+    val weekFields = WeekFields.of(firstDayOfWeek, 1)
     val firstWeekNumber = this.atDay(1)[weekFields.weekOfMonth()]
     val lastWeekNumber = this.atEndOfMonth()[weekFields.weekOfMonth()]
     return lastWeekNumber - firstWeekNumber + 1 // Both weeks inclusive
+}
+
+fun LocalDate.getNumberWeeks(firstDayOfWeek: Int): Int {
+    val firstMonthDate = withDayOfMonth(1)
+    val lastMonthDate = plusMonths(1).withDayOfMonth(1).plusDays(-1)
+
+    val from = firstMonthDate.plusDays(firstDayOfWeek % 7 - firstMonthDate.dayOfWeek % 7)
+    val to = lastMonthDate.plusDays(firstDayOfWeek % 7 - lastMonthDate.dayOfWeek % 7)
+
+    Log.d("TestDate", "firstWeekDate: ${from.weekOfWeekyear}, lastWeekDate: ${to.weekOfWeekyear}")
+
+    val firstWeekDate = firstMonthDate.plusDays(firstDayOfWeek % 7 - firstMonthDate.dayOfWeek % 7)
+    val lastWeekDate = lastMonthDate.plusDays(firstDayOfWeek % 7 - lastMonthDate.dayOfWeek % 7)
+    val weekDiff = if (firstWeekDate.weekyear < lastWeekDate.weekyear)
+        lastWeekDate.weekOfWeekyear + 1
+    else lastWeekDate.weekOfWeekyear - firstWeekDate.weekOfWeekyear
+
+    return weekDiff + 1
 }

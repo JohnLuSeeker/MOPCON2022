@@ -22,11 +22,15 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.windowInsetsTopHeight
+import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -40,9 +44,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.samples.crane.R
 import androidx.compose.samples.crane.calendar.model.CalendarState
 import androidx.compose.samples.crane.home.MainViewModel
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import java.time.DayOfWeek
 import java.time.LocalDate
 
 @Composable
@@ -73,16 +80,99 @@ private fun CalendarContent(
         modifier = Modifier.windowInsetsPadding(
             WindowInsets.navigationBars.only(WindowInsetsSides.Start + WindowInsetsSides.End)
         ),
-        backgroundColor = MaterialTheme.colors.primary,
+        backgroundColor = Color.White,
         topBar = {
             CalendarTopAppBar(calendarState, onBackPressed)
         }
     ) { contentPadding ->
-        Calendar(
+        RoutineCalendar(
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             calendarState = calendarState,
-            onDayClicked = onDayClicked,
-            contentPadding = contentPadding
-        )
+            firstDayOfWeek = DayOfWeek.SUNDAY,
+            dividerContent = { day, month ->
+                val isInThisMonth = day.month == month
+                if (isInThisMonth) {
+                    Divider(
+                        color = Color.LightGray,
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .height(24.dp)
+                            .width(2.dp)
+                    )
+                }
+            }
+        ) { day, month ->
+            val isLastDay = day.dayOfMonth == day.month.maxLength()
+            val isFirstDay = day.dayOfMonth == 1
+            val isInThisMonth = day.month == month
+            if (isInThisMonth) {
+                val fakeMap = mapOf<LocalDate, Boolean?>(
+                    LocalDate.now() to true,
+                    LocalDate.now().plusDays(1) to false,
+                    LocalDate.now().plusDays(-7) to true
+                )
+
+                when (fakeMap.getOrDefault(day, null)) {
+                    true -> WaterBallSolid(color = Color(0xFFF58D67))
+                    false -> WaterBallOutline(color = Color(0xFFF58D67))
+                    else -> WaterBallSolid(color = Color.Transparent)
+                }
+            } else {
+                WaterBallSolid(color = Color.Transparent)
+            }
+        }
+
+//        DailyReviewMonthlyCalendar(
+//            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+//            calendarState = calendarState,
+//            month = calendarState.getMonth(0),
+//            firstDayOfWeek = DayOfWeek.SUNDAY
+//        ){ day, month ->
+//            val isLastDay = day.dayOfMonth == day.month.maxLength()
+//            val isFirstDay = day.dayOfMonth == 1
+//            val isInThisMonth = day.month == month
+//            if (isInThisMonth) {
+//                val fakeMap = mapOf<LocalDate, Boolean?>(
+//                    LocalDate.now() to true,
+//                    LocalDate.now().plusDays(1) to false,
+//                    LocalDate.now().plusDays(-7) to true
+//                )
+//
+//                when (fakeMap.getOrDefault(day, null)) {
+//                    true -> WaterBallSolid(color = Color(0xFFF58D67))
+//                    false -> WaterBallOutline(color = Color(0xFFF58D67))
+//                    else -> WaterBallSolid(color = Color.Transparent)
+//                }
+//            } else {
+//                WaterBallSolid(color = Color.Transparent)
+//            }
+//        }
+
+//        DailyReviewWeeklyCalendar(
+//            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+//            calendarState = calendarState,
+//            week = calendarState.getMonth(0).weeks.first(),
+//            firstDayOfWeek = DayOfWeek.SUNDAY
+//        ){ day, month ->
+//            val isLastDay = day.dayOfMonth == day.month.maxLength()
+//            val isFirstDay = day.dayOfMonth == 1
+//            val isInThisMonth = day.month == month
+//            if (isInThisMonth) {
+//                val fakeMap = mapOf<LocalDate, Boolean?>(
+//                    LocalDate.now() to true,
+//                    LocalDate.now().plusDays(1) to false,
+//                    LocalDate.now().plusDays(-7) to true
+//                )
+//
+//                when (fakeMap.getOrDefault(day, null)) {
+//                    true -> WaterBallSolid(color = Color(0xFFF58D67))
+//                    false -> WaterBallOutline(color = Color(0xFFF58D67))
+//                    else -> WaterBallSolid(color = Color.Transparent)
+//                }
+//            } else {
+//                WaterBallSolid(color = Color.Transparent)
+//            }
+//        }
     }
 }
 

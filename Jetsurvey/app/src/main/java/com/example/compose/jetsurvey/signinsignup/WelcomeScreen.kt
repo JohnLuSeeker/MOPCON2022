@@ -74,12 +74,12 @@ fun WelcomeScreen(onEvent: (WelcomeEvent) -> Unit) {
                     .animateContentSize()
             )
 
-            AnimatedVisibility(
-                showBranding,
-                Modifier.fillMaxWidth()
-            ) {
-                Branding()
-            }
+//            AnimatedVisibility(
+//                showBranding,
+//                Modifier.fillMaxWidth()
+//            ) {
+//                Branding()
+//            }
 
             Spacer(
                 modifier = Modifier

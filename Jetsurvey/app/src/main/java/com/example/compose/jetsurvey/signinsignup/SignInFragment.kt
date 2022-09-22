@@ -39,7 +39,9 @@ class SignInFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
+        val args = SignInFragmentArgs.fromBundle(requireArguments())
+        viewModel.qrCode(args.email)
         viewModel.navigateTo.observe(viewLifecycleOwner) { navigateToEvent ->
             navigateToEvent.getContentIfNotHandled()?.let { navigateTo ->
                 navigate(navigateTo, Screen.SignIn)

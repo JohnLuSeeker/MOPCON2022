@@ -31,8 +31,11 @@ class WelcomeViewModel(private val userRepository: UserRepository) : ViewModel()
     private val _navigateTo = MutableLiveData<Event<Screen>>()
     val navigateTo: LiveData<Event<Screen>> = _navigateTo
 
+    var _email: String = ""
+
     fun handleContinue(email: String) {
         if (userRepository.isKnownUserEmail(email)) {
+            _email = email
             _navigateTo.value = Event(SignIn)
         } else {
             _navigateTo.value = Event(SignUp)

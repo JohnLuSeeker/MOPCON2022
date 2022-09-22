@@ -16,17 +16,21 @@
 
 package com.example.compose.jetsurvey.signinsignup
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.example.compose.jetsurvey.Screen
 import com.example.compose.jetsurvey.Screen.SignUp
 import com.example.compose.jetsurvey.Screen.Survey
+import com.example.compose.jetsurvey.network.qrcode
 import com.example.compose.jetsurvey.util.Event
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class SignInViewModel(private val userRepository: UserRepository) : ViewModel() {
-
     private val _navigateTo = MutableLiveData<Event<Screen>>()
     val navigateTo: LiveData<Event<Screen>>
         get() = _navigateTo
@@ -46,6 +50,13 @@ class SignInViewModel(private val userRepository: UserRepository) : ViewModel() 
 
     fun signUp() {
         _navigateTo.value = Event(SignUp)
+    }
+
+    fun qrCode(username: String){
+        viewModelScope.launch(Dispatchers.IO) {
+            Log.d("ss", username)
+            qrcode(username)
+        }
     }
 }
 

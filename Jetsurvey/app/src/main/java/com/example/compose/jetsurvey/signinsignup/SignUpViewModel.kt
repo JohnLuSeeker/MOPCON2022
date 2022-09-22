@@ -20,10 +20,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.example.compose.jetsurvey.Screen
 import com.example.compose.jetsurvey.Screen.SignIn
 import com.example.compose.jetsurvey.Screen.Survey
+import com.example.compose.jetsurvey.network.UserSignupReqDTO
+import com.example.compose.jetsurvey.network.signup
 import com.example.compose.jetsurvey.util.Event
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class SignUpViewModel(private val userRepository: UserRepository) : ViewModel() {
 
@@ -36,7 +41,14 @@ class SignUpViewModel(private val userRepository: UserRepository) : ViewModel() 
      */
     fun signUp(email: String, password: String) {
         userRepository.signUp(email, password)
-        _navigateTo.value = Event(Survey)
+        viewModelScope.launch(Dispatchers.IO) {
+            signup(
+                UserSignupReqDTO(
+                username = email,
+                password = password
+            ))
+            _navigateTo.postValue(Event(Survey))
+        }
     }
 
     fun signInAsGuest() {

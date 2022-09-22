@@ -82,13 +82,13 @@ fun SignInSignUpScreen(
             ) {
                 content()
             }
-            Spacer(modifier = Modifier.height(16.dp))
-            OrSignInAsGuest(
-                onSignedInAsGuest = onSignedInAsGuest,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
-            )
+//            Spacer(modifier = Modifier.height(16.dp))
+//            OrSignInAsGuest(
+//                onSignedInAsGuest = onSignedInAsGuest,
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(horizontal = 20.dp)
+//            )
         }
     }
 }
