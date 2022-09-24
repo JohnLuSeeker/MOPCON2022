@@ -44,7 +44,7 @@ class SignInFragment : Fragment() {
         viewModel.qrCode(args.email)
         viewModel.navigateTo.observe(viewLifecycleOwner) { navigateToEvent ->
             navigateToEvent.getContentIfNotHandled()?.let { navigateTo ->
-                navigate(navigateTo, Screen.SignIn)
+                navigate(navigateTo, Screen.SignIn, )
             }
         }
 
@@ -59,10 +59,11 @@ class SignInFragment : Fragment() {
             setContent {
                 JetsurveyTheme {
                     SignIn(
+                        byteArray = viewModel._byteArray,
                         onNavigationEvent = { event ->
                             when (event) {
                                 is SignInEvent.SignIn -> {
-                                    viewModel.signIn(event.email, event.password)
+                                    viewModel.signIn(event.email, event.password, event.code)
                                 }
                                 SignInEvent.SignUp -> {
                                     viewModel.signUp()

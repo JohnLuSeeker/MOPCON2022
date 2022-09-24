@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -55,7 +56,7 @@ import com.example.compose.jetsurvey.util.supportWideScreen
 import kotlinx.coroutines.launch
 
 sealed class SignInEvent {
-    data class SignIn(val email: String, val password: String) : SignInEvent()
+    data class SignIn(val email: String, val password: String, val code: String) : SignInEvent()
     object SignUp : SignInEvent()
     object SignInAsGuest : SignInEvent()
     object NavigateBack : SignInEvent()
@@ -63,7 +64,9 @@ sealed class SignInEvent {
 
 @OptIn(ExperimentalMaterial3Api::class) // Scaffold is experimental in m3
 @Composable
-fun SignIn(onNavigationEvent: (SignInEvent) -> Unit) {
+fun SignIn(
+    byteArray: ByteArray = byteArrayOf(),
+    onNavigationEvent: (SignInEvent) -> Unit) {
 
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -86,8 +89,9 @@ fun SignIn(onNavigationEvent: (SignInEvent) -> Unit) {
             ) {
                 Column(modifier = Modifier.fillMaxWidth()) {
                     SignInContent(
-                        onSignInSubmitted = { email, password ->
-                            onNavigationEvent(SignInEvent.SignIn(email, password))
+                        byteArray = byteArray,
+                        onSignInSubmitted = { email, password, code ->
+                            onNavigationEvent(SignInEvent.SignIn(email, password, code))
                         }
                     )
                     Spacer(modifier = Modifier.height(16.dp))
@@ -107,14 +111,19 @@ fun SignIn(onNavigationEvent: (SignInEvent) -> Unit) {
 
 @Composable
 fun SignInContent(
-    onSignInSubmitted: (email: String, password: String) -> Unit,
+    byteArray: ByteArray = byteArrayOf(),
+    onSignInSubmitted: (email: String, password: String, code: String) -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         val focusRequester = remember { FocusRequester() }
         val emailState by rememberSaveable(stateSaver = EmailStateSaver) {
             mutableStateOf(EmailState())
         }
-        AsyncImage(model = byteArrayOf(), contentDescription = null)
+        AsyncImage(
+            model = byteArray,
+            contentDescription = null,
+            modifier = Modifier.size(128.dp)
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -127,7 +136,7 @@ fun SignInContent(
 
         val onSubmit = {
             if (emailState.isValid && passwordState.isValid) {
-                onSignInSubmitted(emailState.text, passwordState.text)
+                onSignInSubmitted(emailState.text, passwordState.text, codeState.text)
             }
         }
         Password(

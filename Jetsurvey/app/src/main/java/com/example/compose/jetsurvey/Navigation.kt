@@ -18,6 +18,7 @@ package com.example.compose.jetsurvey
 
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.compose.jetsurvey.signinsignup.SignUpFragmentDirections
 import com.example.compose.jetsurvey.signinsignup.WelcomeFragmentDirections
 import java.security.InvalidParameterException
 
@@ -35,7 +36,10 @@ fun Fragment.navigate(to: Screen, from: Screen, arg: String = "") {
             findNavController().navigate(R.id.sign_up_fragment)
         }
         Screen.SignIn -> {
+            if(from == Screen.Welcome)
             findNavController().navigate(WelcomeFragmentDirections.actionWelcomeFragmentToSignInFragment(arg))
+            if(from == Screen.SignUp)
+                findNavController().navigate(SignUpFragmentDirections.actionSignUpFragmentToSignInFragment(arg))
         }
         Screen.Survey -> {
             findNavController().navigate(R.id.survey_fragment)

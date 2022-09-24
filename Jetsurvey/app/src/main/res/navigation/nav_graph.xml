@@ -40,6 +40,9 @@
         android:id="@+id/sign_up_fragment"
         android:name="com.example.compose.jetsurvey.signinsignup.SignUpFragment"
         android:label="Sign up">
+        <action
+            android:id="@+id/action_sign_up_fragment_to_sign_in_fragment"
+            app:destination="@id/sign_in_fragment" />
     </fragment>
     <fragment
         android:id="@+id/survey_fragment"

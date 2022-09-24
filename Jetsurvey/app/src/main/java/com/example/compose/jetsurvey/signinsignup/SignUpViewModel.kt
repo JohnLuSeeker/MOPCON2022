@@ -36,18 +36,21 @@ class SignUpViewModel(private val userRepository: UserRepository) : ViewModel() 
     val navigateTo: LiveData<Event<Screen>>
         get() = _navigateTo
 
+    var _email = ""
+
     /**
      * Consider all sign ups successful
      */
     fun signUp(email: String, password: String) {
         userRepository.signUp(email, password)
         viewModelScope.launch(Dispatchers.IO) {
+            _email = email
             signup(
                 UserSignupReqDTO(
                 username = email,
                 password = password
             ))
-            _navigateTo.postValue(Event(Survey))
+            _navigateTo.postValue(Event(SignIn))
         }
     }
 

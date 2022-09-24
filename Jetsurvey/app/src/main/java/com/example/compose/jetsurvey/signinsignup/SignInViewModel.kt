@@ -17,6 +17,9 @@
 package com.example.compose.jetsurvey.signinsignup
 
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -25,21 +28,38 @@ import androidx.lifecycle.viewModelScope
 import com.example.compose.jetsurvey.Screen
 import com.example.compose.jetsurvey.Screen.SignUp
 import com.example.compose.jetsurvey.Screen.Survey
+import com.example.compose.jetsurvey.network.UserLoginReqDTO
+import com.example.compose.jetsurvey.network.login
 import com.example.compose.jetsurvey.network.qrcode
 import com.example.compose.jetsurvey.util.Event
+import io.ktor.util.InternalAPI
+import io.ktor.util.toByteArray
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.ByteArrayOutputStream
+import java.io.FileOutputStream
 
 class SignInViewModel(private val userRepository: UserRepository) : ViewModel() {
     private val _navigateTo = MutableLiveData<Event<Screen>>()
     val navigateTo: LiveData<Event<Screen>>
         get() = _navigateTo
 
+    var _byteArray by mutableStateOf(byteArrayOf())
+
     /**
      * Consider all sign ins successful
      */
-    fun signIn(email: String, password: String) {
+    fun signIn(email: String, password: String, code: String) {
         userRepository.signIn(email, password)
+        viewModelScope.launch(Dispatchers.IO) {
+            login(
+                UserLoginReqDTO(
+                    username = email,
+                    password = password,
+                    code = code
+                )
+            )
+        }
         _navigateTo.value = Event(Survey)
     }
 
@@ -52,10 +72,11 @@ class SignInViewModel(private val userRepository: UserRepository) : ViewModel() 
         _navigateTo.value = Event(SignUp)
     }
 
+    @OptIn(InternalAPI::class)
     fun qrCode(username: String){
         viewModelScope.launch(Dispatchers.IO) {
             Log.d("ss", username)
-            qrcode(username)
+            _byteArray = qrcode(username).content.toByteArray()
         }
     }
 }

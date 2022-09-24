@@ -42,7 +42,7 @@ class SignUpFragment : Fragment() {
     ): View {
         viewModel.navigateTo.observe(viewLifecycleOwner) { navigateToEvent ->
             navigateToEvent.getContentIfNotHandled()?.let { navigateTo ->
-                navigate(navigateTo, Screen.SignUp)
+                navigate(navigateTo, Screen.SignUp, viewModel._email)
             }
         }
 
